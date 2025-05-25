@@ -1,0 +1,38 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        pip install Flask
+        pip install pytest
+
+    - name: Lint the code
+      run: |
+        pip install flake8
+        flake8 app.py
+
+    - name: Run tests
+      run: |
+        pytest
+
+    - name: Build Docker image
+      run: |
+        docker build -t my-python-app .
+
+    - name: (Optional) Deploy to Kubernetes
+      run: |
+        # Add your deployment script here
